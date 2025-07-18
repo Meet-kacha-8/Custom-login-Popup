@@ -31,6 +31,11 @@ class CLP_Frontend
                 background-color: {$primary};
                 color: {$secondary};
             }
+            
+            .clp-popup input[type='submit']{
+                border : none !important;
+            }
+            
             .clp-popup .content button:hover {
                 opacity: 0.9;
             }

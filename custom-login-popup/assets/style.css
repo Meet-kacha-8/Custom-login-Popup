@@ -1,0 +1,160 @@
+/* Simple styling for popup */
+.clp-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.clp-popup .content {
+    background: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    width: 300px;
+}
+
+/* Black and White Popup Styles */
+
+.clp-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    font-family: Arial, sans-serif;
+}
+
+.clp-popup .content {
+    background: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    width: 350px;
+    max-width: 90%;
+    border: 1px solid #000;
+    color: #000;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.clp-popup .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    color: #000;
+    cursor: pointer;
+}
+
+.clp-popup h3 {
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: center;
+    color: #000;
+}
+
+.clp-popup form {
+    margin-top: 15px;
+}
+
+.clp-popup form p {
+    margin: 10px 0;
+}
+
+.clp-popup label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #000;
+}
+
+.clp-popup input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+}
+
+.clp-popup button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.clp-popup button:hover {
+    background: #333;
+}
+
+.clp-popup a {
+    color: #000;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
+.clp-popup .clp-errors {
+    background: #fff0f0;
+    color: #900;
+    border: 1px solid #900;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+/* Title styles */
+.clp-popup-title {
+    background-color: #000;
+    color: #fff !important;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+}
+
+/*   */
+
+.clp-reset-password-page,
+.clp-notice {
+
+    justify-content: center;
+    align-items: center;
+    padding: 200px 0;
+}
+
+.clp-reset-password-page h2 {
+    margin: 10px 0;
+}
+
+.clp-reset-password-page,
+clp-notice {
+    max-width: 400px;
+    width: 100%;
+}
+
+.clp-reset-password-page label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.clp-reset-password-page input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+.clp-reset-password-page button {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px;
+}
+

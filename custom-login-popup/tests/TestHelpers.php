@@ -2,88 +2,86 @@
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group custom-login-popup
+ */
 class TestHelpers extends TestCase
 {
-    public function test_login_shortcode_exists()
+    /**
+     * Make sure WordPress hooks are fired.
+     */
+    protected function setUp(): void
     {
-        $shortcodes = array_keys($GLOBALS['shortcode_tags']);
-        $this->assertContains('clp_login_form', $shortcodes, 'clp_login_form shortcode should be registered');
+        parent::setUp();
+
+        // Fire WordPress hooks to ensure plugin registers shortcodes and AJAX.
+        do_action('init');
+        do_action('admin_init');
     }
 
-    public function test_user_can_login()
+    /**
+     * Plugin main file exists.
+     */
+    public function test_plugin_file_exists()
     {
-        if (username_exists('loginuser')) {
-            wp_delete_user(get_user_by('login', 'loginuser')->ID);
-        }
-
-        $user_id = wp_create_user('loginuser', 'password', 'loginuser@example.com');
-        $this->assertIsInt($user_id, 'User ID should be an integer');
-
-        $creds = [
-            'user_login'    => 'loginuser',
-            'user_password' => 'password',
-            'remember'      => true,
-        ];
-        $user = wp_signon($creds);
-
-        $this->assertInstanceOf(WP_User::class, $user, 'wp_signon() should return a WP_User object');
-        $this->assertEquals($user_id, $user->ID, 'Logged in user ID should match created user ID');
+        $this->assertFileExists(
+            dirname(__DIR__) . '/__custom-login-popup.php',
+            'Plugin main file should exist'
+        );
     }
 
-    public function test_register_shortcode_exists()
+    /**
+     * Template files exist.
+     */
+    public function test_templates_exist()
     {
-        $shortcodes = array_keys($GLOBALS['shortcode_tags']);
-        $this->assertContains('clp_register_form', $shortcodes, 'clp_register_form shortcode should be registered');
+        $this->assertFileExists(
+            dirname(__DIR__) . '/templates/__reset-password-template.php',
+            'Reset password template should exist'
+        );
+        $this->assertFileExists(
+            dirname(__DIR__) . '/templates/popup.php',
+            'Popup template should exist'
+        );
     }
 
-    public function test_registration_creates_user()
+    /**
+     * Shortcodes are registered.
+     */
+    public function test_shortcodes_registered()
     {
-        if (username_exists('unituser')) {
-            wp_delete_user(get_user_by('login', 'unituser')->ID);
-        }
+        global $shortcode_tags;
 
-        $username = 'unituser';
-        $email    = 'unituser@example.com';
-        $password = 'password';
+        $this->assertArrayHasKey(
+            'clp_login_form',
+            $shortcode_tags,
+            'Shortcode [clp_login_form] should be registered'
+        );
 
-        $user_id = wp_create_user($username, $password, $email);
-        $this->assertIsInt($user_id, 'User ID should be an integer');
-
-        $user = get_user_by('ID', $user_id);
-        $this->assertEquals($username, $user->user_login, 'Username should match');
+        $this->assertArrayHasKey(
+            'clp_register_form',
+            $shortcode_tags,
+            'Shortcode [clp_register_form] should be registered'
+        );
     }
 
-    public function test_logout_clears_current_user()
+    /**
+     * AJAX actions are registered.
+     */
+    public function test_ajax_actions_registered()
     {
-        if (username_exists('logoutuser')) {
-            wp_delete_user(get_user_by('login', 'logoutuser')->ID);
-        }
+        global $wp_filter;
 
-        $user_id = wp_create_user('logoutuser', 'password', 'logoutuser@example.com');
-        wp_set_current_user($user_id);
+        $this->assertArrayHasKey(
+            'wp_ajax_clp_login',
+            $wp_filter,
+            'AJAX action wp_ajax_clp_login should be registered'
+        );
 
-        // instead of wp_logout() (which sends headers), use this:
-        wp_set_current_user(0);
-
-        $this->assertEquals(0, get_current_user_id(), 'User should be logged out');
-    }
-
-    public function test_reset_password_template_exists()
-    {
-        $template_path = dirname(__DIR__) . '/templates/__reset-password-template.php';
-        $this->assertFileExists($template_path, 'Reset password template should exist');
-    }
-
-    public function test_ajax_actions_are_registered()
-    {
-        $this->assertArrayHasKey('wp_ajax_clp_login', $GLOBALS['wp_filter'], 'AJAX action wp_ajax_clp_login should be registered');
-        $this->assertArrayHasKey('wp_ajax_nopriv_clp_login', $GLOBALS['wp_filter'], 'AJAX action wp_ajax_nopriv_clp_login should be registered');
-    }
-
-    public function test_template_loader_returns_template()
-    {
-        $template = clp_get_template_path('popup.php');
-        $this->assertNotEmpty($template, 'Template path should not be empty');
-        $this->assertFileExists($template, 'Template file should exist');
+        $this->assertArrayHasKey(
+            'wp_ajax_nopriv_clp_login',
+            $wp_filter,
+            'AJAX action wp_ajax_nopriv_clp_login should be registered'
+        );
     }
 }

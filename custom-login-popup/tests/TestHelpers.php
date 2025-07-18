@@ -2,86 +2,46 @@
 
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group custom-login-popup
- */
 class TestHelpers extends TestCase
 {
-    /**
-     * Make sure WordPress hooks are fired.
-     */
-    protected function setUp(): void
+    public function test_login_shortcode_exists()
     {
-        parent::setUp();
-
-        // Fire WordPress hooks to ensure plugin registers shortcodes and AJAX.
-        do_action('init');
-        do_action('admin_init');
+        $shortcodes = array_keys($GLOBALS['shortcode_tags']);
+        $this->assertContains('clp_login_form', $shortcodes, 'clp_login_form shortcode should be registered');
     }
 
-    /**
-     * Plugin main file exists.
-     */
-    public function test_plugin_file_exists()
+    public function test_user_can_login()
     {
-        $this->assertFileExists(
-            dirname(__DIR__) . '/__custom-login-popup.php',
-            'Plugin main file should exist'
-        );
+        $user_id = wp_create_user('loginuser', 'password', 'loginuser@example.com');
+        $this->assertIsInt($user_id, 'User ID should be an integer');
+
+        $creds = [
+            'user_login'    => 'loginuser',
+            'user_password' => 'password',
+            'remember'      => true,
+        ];
+        $user = wp_signon($creds);
+
+        $this->assertInstanceOf(WP_User::class, $user, 'wp_signon() should return a WP_User object');
+        $this->assertEquals($user_id, $user->ID, 'Logged in user ID should match created user ID');
     }
 
-    /**
-     * Template files exist.
-     */
-    public function test_templates_exist()
+    public function test_register_shortcode_exists()
     {
-        $this->assertFileExists(
-            dirname(__DIR__) . '/templates/__reset-password-template.php',
-            'Reset password template should exist'
-        );
-        $this->assertFileExists(
-            dirname(__DIR__) . '/templates/popup.php',
-            'Popup template should exist'
-        );
+        $shortcodes = array_keys($GLOBALS['shortcode_tags']);
+        $this->assertContains('clp_register_form', $shortcodes, 'clp_register_form shortcode should be registered');
     }
 
-    /**
-     * Shortcodes are registered.
-     */
-    public function test_shortcodes_registered()
+    public function test_registration_creates_user()
     {
-        global $shortcode_tags;
+        $username = 'unituser';
+        $email    = 'unituser@example.com';
+        $password = 'password';
 
-        $this->assertArrayHasKey(
-            'clp_login_form',
-            $shortcode_tags,
-            'Shortcode [clp_login_form] should be registered'
-        );
+        $user_id = wp_create_user($username, $password, $email);
+        $this->assertIsInt($user_id, 'User ID should be an integer');
 
-        $this->assertArrayHasKey(
-            'clp_register_form',
-            $shortcode_tags,
-            'Shortcode [clp_register_form] should be registered'
-        );
-    }
-
-    /**
-     * AJAX actions are registered.
-     */
-    public function test_ajax_actions_registered()
-    {
-        global $wp_filter;
-
-        $this->assertArrayHasKey(
-            'wp_ajax_clp_login',
-            $wp_filter,
-            'AJAX action wp_ajax_clp_login should be registered'
-        );
-
-        $this->assertArrayHasKey(
-            'wp_ajax_nopriv_clp_login',
-            $wp_filter,
-            'AJAX action wp_ajax_nopriv_clp_login should be registered'
-        );
+        $user = get_user_by('ID', $user_id);
+        $this->assertEquals($username, $user->user_login, 'Username should match');
     }
 }

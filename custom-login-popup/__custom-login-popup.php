@@ -6,7 +6,10 @@ Version: 1.0
 Author: Your Name
 */
 
-if (! defined('ABSPATH')) exit;
+if ( ! defined( 'ABSPATH' ) && ! defined( 'PHPUNIT_RUNNING' ) ) {
+    exit;
+}
+
 
 define('CLP_PATH', plugin_dir_path(__FILE__));
 define('CLP_URL', plugin_dir_url(__FILE__));

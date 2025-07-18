@@ -15,6 +15,9 @@
     padding: 20px;
     width: 300px;
 }
+.login-remember label #rememberme{
+    width: 5% !important;
+}
 
 /* Black and White Popup Styles */
 

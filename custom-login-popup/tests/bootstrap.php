@@ -18,3 +18,5 @@ require_once WP_TESTS_ROOT . '/wp-load.php';
 // Load plugin file explicitly
 require_once WP_PLUGIN_DIR . '/custom-login-popup/__custom-login-popup.php';
 
+
+
